@@ -1,4 +1,4 @@
-package io.kuenzler.whatsappwebtogo;
+package io.ghoedev.whatsweb;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;

@@ -1,4 +1,4 @@
-package io.kuenzler.whatsappwebtogo;
+package io.ghoedev.whatsweb;
 
 import android.Manifest;
 import android.app.Activity;
@@ -51,6 +51,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -82,7 +84,7 @@ public class WebviewActivity extends AppCompatActivity implements NavigationView
     private static final int STORAGE_PERMISSION_RESULTCODE = 204;
 
     public static final String DEBUG_TAG = "WAWEBTOGO";
-
+    private static AppOpenManager appOpenManager;
     private final Activity activity = this;
 
     private SharedPreferences mSharedPrefs;
@@ -107,7 +109,17 @@ public class WebviewActivity extends AppCompatActivity implements NavigationView
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        MobileAds.initialize(
+                this,
+                initializationStatus -> {});
 
+
+
+
+
+        AdManager adManager = new AdManager(this,getString(R.string.ad_unit_id));
+        adManager.createAd();
+        appOpenManager = new AppOpenManager(this);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -548,6 +560,9 @@ public class WebviewActivity extends AppCompatActivity implements NavigationView
 
     @Override
     public void onBackPressed() {
+        InterstitialAd ad = AdManager.showInterstitial();
+        if (ad != null) {
+            ad.show();}
         //close drawer if open and impl. press back again to leave
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -615,13 +630,22 @@ public class WebviewActivity extends AppCompatActivity implements NavigationView
             mWebView.loadUrl("javascript:localStorage.clear()");
             WebStorage.getInstance().deleteAllData();
             loadWhatsapp();
+            InterstitialAd ad = AdManager.showInterstitial();
+            if (ad != null) {
+                ad.show();}
         } else if (id == R.id.nav_new) {
             //showToast("nav_new");
         } else if (id == R.id.nav_switch) {
             //showToast("nav_switch");
         } else if (id == R.id.nav_settings) {
+            InterstitialAd ad = AdManager.showInterstitial();
+            if (ad != null) {
+                ad.show();}
             //showToast("nav_settings");
         } else if (id == R.id.nav_about) {
+            InterstitialAd ad = AdManager.showInterstitial();
+            if (ad != null) {
+                ad.show();}
             showAbout();
         } else if (id == R.id.nav_reload) {
             showSnackbar("reloading...");
